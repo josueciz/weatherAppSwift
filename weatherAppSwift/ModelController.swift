@@ -26,8 +26,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     override init() {
         super.init()
         // Create the data model.
-        let dateFormatter = DateFormatter()
-        pageData = dateFormatter.monthSymbols
+        pageData = ["Today","Details for Today","Forecast"]
     }
 
     func viewControllerAtIndex(_ index: Int, storyboard: UIStoryboard) -> DataViewController? {
