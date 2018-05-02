@@ -48,25 +48,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     {
         let stringurl = "https://ec-weather-proxy.appspot.com/forecast/29e4a4ce0ec0068b03fe203fa81d457f/- 33.9249,18.4241?units=ca&delay=5&chaos=0.2".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let urlString = URL(string: stringurl)
-        print(stringurl)
         if let url = urlString
         {
             self.dispatchGroup.enter()
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if error != nil {
-                    print(error ?? "Failed, also unable to get error")
+                    print(error ?? "\nFailed to download data and get accurate error index\n")
                 } else {
                     if let usableData = data {
                         do {
                             let json = try JSONSerialization.jsonObject(with: usableData, options: []) as! [String: AnyObject]
-                            print("\n\nKeys found:\n")
-                            for key in json
-                            {
-                                print("\t-",key,"\n")
-                            }
                             self.weather = WeatherModel.init(JSON: json)
                         } catch let error as NSError {
-                            print("Failed to load: \(error.localizedDescription)")
+                            print("\nFailed to load: \(error.localizedDescription)\n")
                         }
                     }
                 }
