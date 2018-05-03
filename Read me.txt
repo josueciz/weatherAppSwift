@@ -1,0 +1,4 @@
+* Library used:
+- I first used the api via a pod library called DarkSkyKit
+- Then i decided to agaisnts using a pod and just decided to make an async request
+
