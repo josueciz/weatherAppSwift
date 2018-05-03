@@ -34,7 +34,15 @@ class ForecastViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weather!.daily.data.count
+        if weather?.daily.data.count == nil
+        {
+            return 0
+        }
+        else
+        {
+            return weather!.daily.data.count
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

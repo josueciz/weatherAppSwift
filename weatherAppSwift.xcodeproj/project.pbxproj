@@ -22,6 +22,7 @@
 		CAFFB128209A17DC00D70F21 /* ForecastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFFB127209A17DC00D70F21 /* ForecastViewController.swift */; };
 		CAFFB12A209A18F000D70F21 /* detailedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFFB129209A18F000D70F21 /* detailedTableViewCell.swift */; };
 		CAFFB12F209ACD1100D70F21 /* Read me.txt in Resources */ = {isa = PBXBuildFile; fileRef = CAFFB12E209ACD1100D70F21 /* Read me.txt */; };
+		CAFFB132209AD01100D70F21 /* weatherAppSwift.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CAFFB130209AD01100D70F21 /* weatherAppSwift.xcdatamodeld */; };
 		EF7149763CA79DEEA0C193ED /* Pods_weatherAppSwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB909EB18E7BE168ECDB9539 /* Pods_weatherAppSwiftTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		CAFFB127209A17DC00D70F21 /* ForecastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastViewController.swift; sourceTree = "<group>"; };
 		CAFFB129209A18F000D70F21 /* detailedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = detailedTableViewCell.swift; sourceTree = "<group>"; };
 		CAFFB12E209ACD1100D70F21 /* Read me.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Read me.txt"; sourceTree = "<group>"; };
+		CAFFB131209AD01100D70F21 /* Model01.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model01.xcdatamodel; sourceTree = "<group>"; };
 		DB909EB18E7BE168ECDB9539 /* Pods_weatherAppSwiftTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_weatherAppSwiftTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E056C362F6E304E8136C0D06 /* Pods-weatherAppSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weatherAppSwift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-weatherAppSwift/Pods-weatherAppSwift.debug.xcconfig"; sourceTree = "<group>"; };
 		E787095CB4F1B9576D9D049A /* Pods-weatherAppSwiftTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weatherAppSwiftTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-weatherAppSwiftTests/Pods-weatherAppSwiftTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				CAFFB125209A17C500D70F21 /* HourlyViewController.swift */,
 				CAFFB127209A17DC00D70F21 /* ForecastViewController.swift */,
 				CAFFB129209A18F000D70F21 /* detailedTableViewCell.swift */,
+				CAFFB130209AD01100D70F21 /* weatherAppSwift.xcdatamodeld */,
 			);
 			path = weatherAppSwift;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CAFFB132209AD01100D70F21 /* weatherAppSwift.xcdatamodeld in Sources */,
 				CAFFB126209A17C500D70F21 /* HourlyViewController.swift in Sources */,
 				CAA062CC2090EFF500C31077 /* RootViewController.swift in Sources */,
 				CAA062D02090EFF500C31077 /* ModelController.swift in Sources */,
@@ -572,6 +576,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		CAFFB130209AD01100D70F21 /* weatherAppSwift.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CAFFB131209AD01100D70F21 /* Model01.xcdatamodel */,
+			);
+			currentVersion = CAFFB131209AD01100D70F21 /* Model01.xcdatamodel */;
+			path = weatherAppSwift.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = CAA062BE2090EFF500C31077 /* Project object */;
 }

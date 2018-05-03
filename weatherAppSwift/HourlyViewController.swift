@@ -34,7 +34,14 @@ class HourlyViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weather!.hourly.data.count
+        if weather?.hourly.data.count == nil
+        {
+            return 0
+        }
+        else
+        {
+            return weather!.hourly.data.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
