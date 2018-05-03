@@ -22,8 +22,15 @@ class RootViewController: UIViewController, UIPageViewControllerDelegate {
 
     override func viewDidAppear(_ animated: Bool) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let time = Date(timeIntervalSinceNow: 0)
+        let timeout = appDelegate.getTime().addingTimeInterval(60)
+        let dif = time > timeout
         while appDelegate.getWeather() == nil
         {
+            if dif
+            {
+                break
+            }
             print("\n\nDispatch result: \n\n",appDelegate.dispatchGroup.wait(timeout: DispatchTime.now() + .seconds(3)),"\n_____________________\n")
         }
         self.ShowWeather()

@@ -2,3 +2,8 @@
 - I first used the api via a pod library called DarkSkyKit
 - Then i decided to agaisnts using a pod and just decided to make an async request
 
+I thought it will take me a couple of hours more but i took me 2 days in between work.
+
+Originally i wanted to use a pods which handles async calls but then i decided against it even though i got it working as v0.1
+
+

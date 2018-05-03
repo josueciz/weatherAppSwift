@@ -54,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var dbAccessCounter: Int = 0
     var apiCounter: Int = 0
     var scheduledTask: Any?
+    let timeOpened: Date = Date(timeIntervalSinceNow: 0)
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -154,6 +155,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             {
                 self.dispatchGroup.leave()
                 self.weather = WeatherModel(JSON: [:])
+                if self.previousWeather != nil
+                {
+                    self.weather = self.previousWeather!
+                }
+                self.showInternetError()
                 print("Cannot get data")
                 dbAccessCounter = 0
             }
@@ -175,6 +181,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         self.apiCounter = 0
                         self.dispatchGroup.leave()
                         self.weather = WeatherModel(JSON: [:])
+                        if self.previousWeather != nil
+                        {
+                            self.weather = self.previousWeather!
+                        }
+                        self.showInternetError()
                         print("Cannot access api")
                         return
                     }
@@ -198,6 +209,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 self.apiCounter = 0
                                 self.dispatchGroup.leave()
                                 self.weather = WeatherModel(JSON: [:])
+                                if self.previousWeather != nil
+                                {
+                                    self.weather = self.previousWeather!
+                                }
+                                self.showInternetError()
                                 print("Cannot decode/serialize json data")
                                 return
                             }
@@ -221,6 +237,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return self.weather!
         }
         return nil
+    }
+    
+    func getTime() -> Date
+    {
+        return timeOpened
+    }
+    
+    func showInternetError()
+    {
+        var str:String!
+        
+        if self.previousWeather != nil
+        {
+            str = "Cannot access API, please check internet connection then close and restart app.\n\nSwitching to last known data."
+        }
+        else
+        {
+            str = "Cannot access API, please check internet connection then close and restart app."
+        }
+        let alert = UIAlertController(title: "Connection error!", message: str, preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        
+        UIApplication.shared.topMostViewController()?.present(alert, animated: true)
     }
     
     func showAlert(previous: WeatherModel?, current: WeatherModel?,forceDisplay: Bool)
