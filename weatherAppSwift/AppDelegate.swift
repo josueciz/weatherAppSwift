@@ -48,14 +48,18 @@ extension UIApplication {
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var weather: WeatherModel? = nil
+    var previousWeather: WeatherModel? = nil
     let dispatchGroup = DispatchGroup()
     var window: UIWindow?
     var dbAccessCounter: Int = 0
     var apiCounter: Int = 0
-
+    var scheduledTask: Any?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        self.checkPersistentStorageForData()
+
+        scheduledTask = Timer.scheduledTimer(timeInterval: 1200.0, target: self, selector: #selector(self.checkPersistentStorageForData), userInfo: nil, repeats: true)
+        (scheduledTask as! Timer).fire()
         return true
     }
 
@@ -96,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
     
-    func checkPersistentStorageForData()
+    @objc func checkPersistentStorageForData()
     {
         let context = persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "WeatherData")
@@ -108,11 +112,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if (result as! [NSManagedObject]).count > 0
             {
                 for data in result as! [NSManagedObject] {
-                    let timestamp = data.value(forKey: "timestamp") as! Date
-                    let jsonData = data.value(forKey: "dataJSON") as! Data
+                    guard let timestamp = data.value(forKey: "timestamp") as? Date else {
+                        self.getCurrentWeather()
+                        return
+                    }
+                    
+                    guard let jsonData = data.value(forKey: "dataJSON") as? Data else {
+                        self.getCurrentWeather()
+                        return
+                    }
                     let timestampPlusTimeout = timestamp.addingTimeInterval(900)
-                    if timestampPlusTimeout < Date(timeIntervalSinceNow: 0)
+                    let timeNow = Date(timeIntervalSinceNow: 0)
+                    if timestampPlusTimeout < timeNow
                     {
+                        let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: AnyObject]
+                        self.previousWeather = WeatherModel.init(JSON: json)
                         self.getCurrentWeather()
                     }
                     else
@@ -175,6 +189,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             self.saveWeatherModel(JSONDATA: usableData)
                             let json = try JSONSerialization.jsonObject(with: usableData, options: []) as! [String: AnyObject]
                             self.weather = WeatherModel.init(JSON: json)
+                            self.showAlert(previous: self.previousWeather, current: self.weather, forceDisplay: false)
                             self.dispatchGroup.leave()
                         } catch let error as NSError {
                             print("\nFailed to load: \(error.localizedDescription)\n")
@@ -208,17 +223,72 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return nil
     }
     
+    func showAlert(previous: WeatherModel?, current: WeatherModel?,forceDisplay: Bool)
+    {
+        if forceDisplay
+        {
+            let alert = UIAlertController(title: "Temperature warning!", message: "Temperature warning: \(current!.currently.data.temperature)", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+            
+            UIApplication.shared.topMostViewController()?.present(alert, animated: true)
+            return
+        }
+        if previous == nil || current == nil
+        {
+            return
+        }
+        else
+        {
+            if (15.0 > previous!.currently.data.temperature) && (previous!.currently.data.temperature < 25.0)
+            {
+                if (current!.currently.data.temperature > 25.0)
+                {
+                    let alert = UIAlertController(title: "Temperature warning!", message: "Temperature warning: \(current!.currently.data.temperature)", preferredStyle: .alert)
+                    
+                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                    
+                    UIApplication.shared.topMostViewController()?.present(alert, animated: true)
+                }
+            }
+        }
+    }
+    // MARK: - Core Data stack
+    func deleteAllData(context: NSManagedObjectContext) {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "WeatherData")
+        fetchRequest.includesPropertyValues = false // Only fetch the managedObjectID (not the full object structure)
+        do
+        {
+            if let fetchResults = try context.fetch(fetchRequest) as? [NSManagedObject]
+            {
+                
+                for result in fetchResults
+                {
+                    context.delete(result)
+                }
+            }
+            self.saveContext()
+        }
+        catch
+        {
+            print("\ndeleteData - Error")
+            return
+        }
+        print("\ndeleteData - Success")
+    }
+    
     func saveWeatherModel(JSONDATA: Data)
     {
         let context = self.persistentContainer.viewContext
+        
+        self.deleteAllData(context: context)
         
         let entity = NSEntityDescription.entity(forEntityName: "WeatherData", in: context)
         let newUser = NSManagedObject(entity: entity!, insertInto: context)
         newUser.setValue(JSONDATA, forKey: "dataJSON")
         newUser.setValue(Date.init(timeIntervalSinceNow: 0), forKey: "timestamp")
+        self.saveContext()
     }
-    
-    // MARK: - Core Data stack
     
     lazy var persistentContainer: NSPersistentContainer = {
         /*
